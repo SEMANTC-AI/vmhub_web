@@ -1,14 +1,31 @@
-// vmhub-web/src/app/api/config/save/route.ts
+// vmhub-web/src/app/api/campaigns/save/route.ts
 
 import { NextResponse } from 'next/server';
 import { adminDb, adminAuth } from '@/lib/firebase-admin';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
 
-const configSchema = z.object({
-  cnpj: z.string().min(14).max(14),
-  vmhubToken: z.string().min(1),
-  whatsappToken: z.string().min(1),
+const campaignSchema = z.object({
+  campaignType: z.enum(['birthday', 'welcome', 'reactivation', 'loyalty']),
+  enabled: z.boolean(),
+  message: z.string().min(1),
+  coupon: z.string().optional(),
+  settings: z.object({
+    // Birthday specific
+    sendTime: z.string().optional(),
+    
+    // Reactivation specific
+    inactiveDays: z.number().optional(),
+    couponValidityDays: z.number().optional(),
+    
+    // Welcome specific
+    welcomeDelay: z.number().optional(),
+    
+    // Loyalty specific
+    minimumPurchase: z.number().optional(),
+    evaluationPeriod: z.number().optional(),
+    vipDiscount: z.number().optional(),
+  }).optional(),
 });
 
 export async function POST(request: Request) {
@@ -27,7 +44,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const validatedData = configSchema.safeParse(body);
+    const validatedData = campaignSchema.safeParse(body);
 
     if (!validatedData.success) {
       return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
@@ -37,16 +54,16 @@ export async function POST(request: Request) {
     await adminDb
       .collection('users')
       .doc(decodedClaims.uid)
+      .collection('campaigns')
+      .doc(validatedData.data.campaignType)
       .set({
         ...validatedData.data,
-        status: 'provisioning',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        lastUpdated: new Date(),
       }, { merge: true });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Save config error:', error);
+    console.error('Save campaign error:', error);
     return NextResponse.json(
       { error: 'Internal server error' }, 
       { status: 500 }
