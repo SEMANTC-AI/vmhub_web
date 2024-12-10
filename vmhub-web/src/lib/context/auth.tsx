@@ -36,15 +36,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const checkConfig = useCallback(async () => {
+    try {
+      const response = await fetch('/api/config/check', {
+        credentials: 'include',
+      });
+      const data = await response.json();
+      return data.hasConfig;
+    } catch (error) {
+      console.error('Failed to check config:', error);
+      return false;
+    }
+  }, []);
+
   const signOut = useCallback(async () => {
     try {
       await firebaseSignOut(auth);
       await clearSession();
-      toast.success('Signed out successfully');
+      toast.success('Sessão encerrada com sucesso');
       router.push('/login');
     } catch (error) {
       console.error('Sign out error:', error);
-      toast.error('Failed to sign out');
+      toast.error('Erro ao encerrar sessão');
     }
   }, [clearSession, router]);
 
@@ -65,22 +78,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (!response.ok) {
             throw new Error('Failed to set session');
           }
+          
           setUser(firebaseUser);
+          
+          // Check configuration after successful login
+          const hasConfig = await checkConfig();
+          router.push(hasConfig ? '/' : '/config');
+          
         } else {
           setUser(null);
           await clearSession();
+          router.push('/login');
         }
       } catch (error) {
         console.error('Auth state change error:', error);
         setUser(null);
         await clearSession();
+        router.push('/login');
       } finally {
         setLoading(false);
       }
     });
 
     return () => unsubscribe();
-  }, [clearSession]);
+  }, [clearSession, checkConfig, router]);
 
   return (
     <AuthContext.Provider value={{ user, loading, signOut }}>
