@@ -2,28 +2,36 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useCampaign } from '@/hooks/use-campaign';
+import { LoyaltyCampaign } from '@/types/campaign';
 import { toast } from 'sonner';
 
 export default function LoyaltyCampaignPage() {
-  const { settings, loading, saveSettings } = useCampaign('loyalty');
-  const [formData, setFormData] = useState({
-    enabled: settings?.enabled || false,
-    message: settings?.message || '',
-    coupon: settings?.coupon || '',
+  const { settings, loading, saveSettings } = useCampaign<LoyaltyCampaign>('loyalty');
+  const [formData, setFormData] = useState<LoyaltyCampaign>({
+    type: 'loyalty',
+    enabled: false,
+    message: '',
+    coupon: '',
     settings: {
-      minimumPurchase: settings?.settings?.minimumPurchase || 1000,
-      evaluationPeriod: settings?.settings?.evaluationPeriod || 90,
-      vipDiscount: settings?.settings?.vipDiscount || 10,
-      reminderFrequency: settings?.settings?.reminderFrequency || 30,
-      reminderMessage: settings?.settings?.reminderMessage || '',
-      maintenanceValue: settings?.settings?.maintenanceValue || 500,
-      renewalMessage: settings?.settings?.renewalMessage || ''
+      minimumPurchase: 1000,
+      evaluationPeriod: 90,
+      vipDiscount: 10,
+      reminderFrequency: 30,
+      reminderMessage: '',
+      maintenanceValue: 500,
+      renewalMessage: ''
     }
   });
+
+  useEffect(() => {
+    if (settings) {
+      setFormData(settings);
+    }
+  }, [settings]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

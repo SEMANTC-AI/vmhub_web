@@ -2,23 +2,31 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useCampaign } from '@/hooks/use-campaign';
+import { ReactivationCampaign } from '@/types/campaign';
 import { toast } from 'sonner';
 
 export default function ReactivationCampaignPage() {
-  const { settings, loading, saveSettings } = useCampaign('reactivation');
-  const [formData, setFormData] = useState({
-    enabled: settings?.enabled || false,
-    message: settings?.message || '',
-    coupon: settings?.coupon || '',
+  const { settings, loading, saveSettings } = useCampaign<ReactivationCampaign>('reactivation');
+  const [formData, setFormData] = useState<ReactivationCampaign>({
+    type: 'reactivation',
+    enabled: false,
+    message: '',
+    coupon: '',
     settings: {
-      inactiveDays: settings?.settings?.inactiveDays || 90,
-      couponValidityDays: settings?.settings?.couponValidityDays || 7,
+      inactiveDays: 90,
+      couponValidityDays: 7
     }
   });
+
+  useEffect(() => {
+    if (settings) {
+      setFormData(settings);
+    }
+  }, [settings]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

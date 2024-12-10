@@ -4,26 +4,12 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/context/auth';
 import { firestore } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { Campaign, CampaignType } from '@/types/campaign';
 
-interface CampaignSettings {
-  enabled: boolean;
-  message: string;
-  coupon?: string;
-  settings?: {
-    sendTime?: string;
-    inactiveDays?: number;
-    couponValidityDays?: number;
-    welcomeDelay?: number;
-    minimumPurchase?: number;
-    evaluationPeriod?: number;
-    vipDiscount?: number;
-  };
-}
-
-export function useCampaign(campaignType: string) {
+export function useCampaign<T extends Campaign>(type: CampaignType) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [settings, setSettings] = useState<CampaignSettings | null>(null);
+  const [settings, setSettings] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -31,11 +17,19 @@ export function useCampaign(campaignType: string) {
       if (!user) return;
 
       try {
-        const docRef = doc(firestore, 'users', user.uid, 'campaigns', campaignType);
+        const docRef = doc(firestore, 'users', user.uid, 'campaigns', type);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setSettings(docSnap.data() as CampaignSettings);
+          setSettings(docSnap.data() as T);
+        } else {
+          // Initialize with default settings based on campaign type
+          setSettings({
+            type,
+            enabled: false,
+            message: '',
+            settings: getDefaultSettings(type)
+          } as T);
         }
       } catch (err) {
         console.error('Error loading campaign settings:', err);
@@ -46,10 +40,10 @@ export function useCampaign(campaignType: string) {
     }
 
     loadSettings();
-  }, [user, campaignType]);
+  }, [user, type]);
 
-  const saveSettings = async (newSettings: CampaignSettings) => {
-    if (!user) return;
+  const saveSettings = async (newSettings: T) => {
+    if (!user) return false;
 
     setLoading(true);
     try {
@@ -58,10 +52,7 @@ export function useCampaign(campaignType: string) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          campaignType,
-          ...newSettings,
-        }),
+        body: JSON.stringify(newSettings),
       });
 
       if (!response.ok) {
@@ -85,4 +76,25 @@ export function useCampaign(campaignType: string) {
     error,
     saveSettings,
   };
+}
+
+function getDefaultSettings(type: CampaignType) {
+  switch (type) {
+    case 'birthday':
+      return { sendTime: '09:00' };
+    case 'welcome':
+      return { welcomeDelay: 0, couponValidityDays: 7 };
+    case 'reactivation':
+      return { inactiveDays: 90, couponValidityDays: 7 };
+    case 'loyalty':
+      return {
+        minimumPurchase: 1000,
+        evaluationPeriod: 90,
+        vipDiscount: 10,
+        reminderFrequency: 30,
+        reminderMessage: '',
+        maintenanceValue: 500,
+        renewalMessage: ''
+      };
+  }
 }

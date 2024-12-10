@@ -2,22 +2,30 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useCampaign } from '@/hooks/use-campaign';
+import { BirthdayCampaign } from '@/types/campaign';
 import { toast } from 'sonner';
 
 export default function BirthdayCampaignPage() {
-  const { settings, loading, saveSettings } = useCampaign('birthday');
-  const [formData, setFormData] = useState({
-    enabled: settings?.enabled || false,
-    message: settings?.message || '',
-    coupon: settings?.coupon || '',
+  const { settings, loading, saveSettings } = useCampaign<BirthdayCampaign>('birthday');
+  const [formData, setFormData] = useState<BirthdayCampaign>({
+    type: 'birthday',
+    enabled: false,
+    message: '',
+    coupon: '',
     settings: {
-      sendTime: settings?.settings?.sendTime || '09:00',
+      sendTime: '09:00'
     }
   });
+
+  useEffect(() => {
+    if (settings) {
+      setFormData(settings);
+    }
+  }, [settings]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
