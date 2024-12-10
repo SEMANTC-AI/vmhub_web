@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Home, Settings, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ProfileMenu } from '@/components/profile-menu';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -72,20 +73,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 ))}
               </nav>
             </div>
-            {/* User profile */}
             <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
-              <div className="flex items-center">
-                <div>
-                  <img
-                    className="inline-block h-9 w-9 rounded-full"
-                    src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`}
-                    alt=""
-                  />
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-700">
-                    {user.email}
-                  </p>
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center">
+                  <ProfileMenu />
                 </div>
               </div>
             </div>

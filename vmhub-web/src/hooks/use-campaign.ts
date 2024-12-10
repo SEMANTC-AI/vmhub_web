@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/context/auth';
 import { firestore } from '@/lib/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { Campaign, CampaignType } from '@/types/campaign';
+import { doc, getDoc } from 'firebase/firestore';
+import type { Campaign, CampaignType } from '@/types/campaign';
 
 export function useCampaign<T extends Campaign>(type: CampaignType) {
   const { user } = useAuth();
@@ -22,14 +22,6 @@ export function useCampaign<T extends Campaign>(type: CampaignType) {
 
         if (docSnap.exists()) {
           setSettings(docSnap.data() as T);
-        } else {
-          // Initialize with default settings based on campaign type
-          setSettings({
-            type,
-            enabled: false,
-            message: '',
-            settings: getDefaultSettings(type)
-          } as T);
         }
       } catch (err) {
         console.error('Error loading campaign settings:', err);
@@ -76,25 +68,4 @@ export function useCampaign<T extends Campaign>(type: CampaignType) {
     error,
     saveSettings,
   };
-}
-
-function getDefaultSettings(type: CampaignType) {
-  switch (type) {
-    case 'birthday':
-      return { sendTime: '09:00' };
-    case 'welcome':
-      return { welcomeDelay: 0, couponValidityDays: 7 };
-    case 'reactivation':
-      return { inactiveDays: 90, couponValidityDays: 7 };
-    case 'loyalty':
-      return {
-        minimumPurchase: 1000,
-        evaluationPeriod: 90,
-        vipDiscount: 10,
-        reminderFrequency: 30,
-        reminderMessage: '',
-        maintenanceValue: 500,
-        renewalMessage: ''
-      };
-  }
 }
