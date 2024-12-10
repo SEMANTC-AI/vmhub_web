@@ -1,3 +1,5 @@
+// vmhub-web/src/app/campaigns/page.tsx
+
 'use client';
 
 import Link from 'next/link';
@@ -22,7 +24,7 @@ const campaigns = [
   },
   {
     id: 'long-time-no-see',
-    name: 'Há Tempo Sem Ver',
+    name: 'Reativação de Clientes',
     description: 'Reconquiste clientes inativos com ofertas especiais',
     icon: Clock,
     href: '/campaigns/long-time-no-see',
@@ -42,7 +44,7 @@ export default function CampaignsPage() {
   return (
     <div className="space-y-6">
       <div className="border-b border-gray-200 pb-5">
-        <h2 className="text-2xl font-semibold text-gray-900">Campanhas</h2>
+        <h2 className="text-2xl font-display font-semibold text-gray-900">Campanhas</h2>
         <p className="mt-2 text-sm text-gray-500">
           Gerencie suas campanhas de marketing automatizadas
         </p>
@@ -60,7 +62,7 @@ export default function CampaignsPage() {
                 <campaign.icon className="h-6 w-6 text-gray-600" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-lg font-medium text-gray-900">
+                <h3 className="text-lg font-display font-medium text-gray-900">
                   {campaign.name}
                 </h3>
                 <p className="mt-1 text-sm text-gray-500">
