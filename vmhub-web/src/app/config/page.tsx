@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { formStyles } from '@/styles/common';
 
 const configSchema = z.object({
   cnpj: z.string().min(14, 'CNPJ inválido').max(14, 'CNPJ inválido'),
@@ -47,25 +48,23 @@ export default function ConfigPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="border-b border-gray-200 pb-5">
-        {/* Using font-display for Space_Grotesk */}
-        <h2 className="text-2xl font-display font-semibold text-gray-900">Configurações</h2>
-        {/* Using default Manrope via font-sans */}
-        <p className="mt-2 text-sm text-gray-500">
-          Configure suas credenciais para integração com VMHub e WhatsApp
+    <div className={formStyles.section}>
+      <div className={formStyles.header}>
+        <h2 className={formStyles.heading}>Configurações</h2>
+        <p className={formStyles.description}>
+          Configure suas credenciais para integração
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-2xl">
+      <form onSubmit={handleSubmit(onSubmit)} className={formStyles.form}>
         <div className="space-y-2">
-          <label htmlFor="cnpj" className="block text-sm font-medium text-gray-700">
+          <label className={formStyles.label}>
             CNPJ
           </label>
           <input
             {...register('cnpj')}
             type="text"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className={formStyles.input}
             placeholder="Digite o CNPJ"
           />
           {errors.cnpj && (
@@ -74,13 +73,13 @@ export default function ConfigPage() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="vmhubToken" className="block text-sm font-medium text-gray-700">
+          <label className={formStyles.label}>
             Token VMHub
           </label>
           <input
             {...register('vmhubToken')}
             type="password"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className={formStyles.input}
             placeholder="Digite o token do VMHub"
           />
           {errors.vmhubToken && (
@@ -89,13 +88,13 @@ export default function ConfigPage() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="whatsappToken" className="block text-sm font-medium text-gray-700">
+          <label className={formStyles.label}>
             Token WhatsApp
           </label>
           <input
             {...register('whatsappToken')}
             type="password"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className={formStyles.input}
             placeholder="Digite o token do WhatsApp"
           />
           {errors.whatsappToken && (
@@ -107,7 +106,7 @@ export default function ConfigPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50"
+            className={formStyles.button}
           >
             {isLoading ? 'Salvando...' : 'Salvar Configurações'}
           </button>

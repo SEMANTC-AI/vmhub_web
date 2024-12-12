@@ -6,7 +6,7 @@ import { createContext, useContext, useEffect, useState, useCallback } from 'rea
 import { onAuthStateChanged, User, signOut as firebaseSignOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { auth } from '../firebase';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 
 interface AuthContextType {
   user: User | null;
@@ -81,7 +81,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           
           setUser(firebaseUser);
           
-          // Check configuration after successful login
           const hasConfig = await checkConfig();
           router.push(hasConfig ? '/' : '/config');
           
