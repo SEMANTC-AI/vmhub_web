@@ -1,3 +1,5 @@
+// vmhub-web/src/styles/common.ts
+
 import { cn } from '@/lib/utils';
 import { Manrope } from 'next/font/google';
 

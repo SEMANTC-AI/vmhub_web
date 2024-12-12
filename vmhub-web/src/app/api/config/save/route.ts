@@ -33,17 +33,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
     }
 
-    // Save to the correct Firestore path to trigger the Cloud Function
+    // Save to the correct Firestore path
     await adminDb
       .collection('users')
       .doc(decodedClaims.uid)
-      .collection('tokens')
-      .doc(validatedData.data.cnpj)
+      .collection(decodedClaims.uid)
+      .doc('config') // Using a fixed document ID
       .set({
-        vmhubToken: validatedData.data.vmhubToken,
-        whatsappToken: validatedData.data.whatsappToken,
+        ...validatedData.data,
         status: 'pending',
         createdAt: new Date(),
+        updatedAt: new Date(),
       });
 
     return NextResponse.json({ success: true });

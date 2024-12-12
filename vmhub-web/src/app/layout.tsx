@@ -3,7 +3,6 @@
 import { Manrope, Space_Grotesk } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
-import { MainLayout } from '@/components/layout/main-layout';
 import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider } from '@/lib/context/auth';
 
@@ -38,7 +37,7 @@ export default function RootLayout({
       >
         <Toaster position="top-center" />
         <AuthProvider>
-          <MainLayout>{children}</MainLayout>
+          {children}
         </AuthProvider>
       </body>
     </html>

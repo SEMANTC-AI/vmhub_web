@@ -1,3 +1,5 @@
+// vmhub-web/src/lib/toast.ts
+
 import { toast as sonnerToast } from 'sonner';
 import { manrope } from '@/styles/common';
 
