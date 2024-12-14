@@ -9,8 +9,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-manrope)'],
-        display: ['var(--font-space-grotesk)'],
+        sans: ['var(--font-poppins)'],
       },
       colors: {
         background: "var(--background)",

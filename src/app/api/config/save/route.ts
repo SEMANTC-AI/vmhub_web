@@ -33,18 +33,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
     }
 
-    // Save to the correct Firestore path
+    // Simply store config as a document: users/{uid}/config
     await adminDb
       .collection('users')
       .doc(decodedClaims.uid)
-      .collection(decodedClaims.uid)
-      .doc('config') // Using a fixed document ID
       .set({
-        ...validatedData.data,
-        status: 'pending',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+        config: {
+          ...validatedData.data,
+          status: 'pending',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
+      }, { merge: true });
 
     return NextResponse.json({ success: true });
   } catch (error) {

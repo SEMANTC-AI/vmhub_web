@@ -40,7 +40,7 @@ export default function LoginPage() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-white">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-500">Carregando...</div>
       </div>
     );
   }

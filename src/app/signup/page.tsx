@@ -20,7 +20,7 @@ export default function SignupPage() {
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="text-zinc-500">Loading...</div>
+        <div className="text-zinc-500">Carregando...</div>
       </div>
     );
   }
