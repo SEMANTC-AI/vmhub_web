@@ -29,12 +29,12 @@ export function useConfig() {
       }
 
       try {
-        // Simply read from users/{uid}
-        const userDoc = doc(firestore, 'users', user.uid);
-        const docSnapshot = await getDoc(userDoc);
+        // Read from the config subcollection
+        const configDoc = doc(firestore, 'users', user.uid, 'config', 'settings');
+        const docSnapshot = await getDoc(configDoc);
 
-        if (docSnapshot.exists() && docSnapshot.data().config) {
-          const data = docSnapshot.data().config as ConfigData;
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data() as ConfigData;
           setConfig({
             cnpj: data.cnpj,
             vmhubToken: data.vmhubToken,

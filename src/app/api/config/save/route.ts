@@ -33,18 +33,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
     }
 
-    // Simply store config as a document: users/{uid}/config
+    // Create a separate config document
     await adminDb
       .collection('users')
       .doc(decodedClaims.uid)
+      .collection('config')
+      .doc('settings')
       .set({
-        config: {
-          ...validatedData.data,
-          status: 'pending',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }
-      }, { merge: true });
+        ...validatedData.data,
+        status: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
 
     return NextResponse.json({ success: true });
   } catch (error) {
