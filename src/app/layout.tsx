@@ -1,15 +1,15 @@
 // src/app/layout.tsx
 
-import { Poppins } from 'next/font/google';
+import { DM_Sans } from 'next/font/google';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider } from '@/lib/context/auth';
 
-const poppins = Poppins({ 
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
-  variable: '--font-poppins',
+  weight: ['400', '500', '700'],
+  variable: '--font-dm-sans',
 });
 
 export const metadata = {
@@ -18,16 +18,16 @@ export const metadata = {
 };
 
 export default function RootLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning className={cn(poppins.variable)}>
+    <html lang="pt-BR" suppressHydrationWarning className={cn(dmSans.variable)}>
       <body
         className={cn(
           'font-sans antialiased',
-          poppins.className
+          dmSans.className
         )}
       >
         <Toaster position="top-center" />

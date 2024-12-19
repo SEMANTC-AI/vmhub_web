@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { authenticate } from './actions';
 import { ResultCode } from '@/lib/utils';
+import { formStyles, poppins } from '@/styles/common';
+import { cn } from '@/lib/utils';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -46,7 +48,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className={cn(formStyles.container, poppins.className)}>
       <div className="flex min-h-screen flex-col items-center justify-center px-4">
         <LoginForm onLogin={handleLogin} error={error} />
       </div>

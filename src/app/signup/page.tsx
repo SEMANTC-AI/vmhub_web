@@ -6,6 +6,8 @@ import SignupForm from '@/components/signup-form';
 import { useAuth } from '@/lib/context/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { formStyles, poppins } from '@/styles/common';
+import { cn } from '@/lib/utils';
 
 export default function SignupPage() {
   const { user, loading } = useAuth();
@@ -25,5 +27,9 @@ export default function SignupPage() {
     );
   }
 
-  return <SignupForm />;
+  return (
+    <div className={cn(formStyles.container, poppins.className)}>
+      <SignupForm />
+    </div>
+  );
 }

@@ -8,6 +8,8 @@ import { Home, Settings, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ProfileMenu } from '@/components/profile-menu';
+import { dmSans } from '@/styles/common';
+import Image from 'next/image';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -20,21 +22,33 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       name: 'Início',
       href: '/',
       icon: Home,
-      current: pathname === '/'
+      current: pathname === '/',
     },
     {
       name: 'Campanhas',
       href: '/campaigns',
       icon: MessageSquare,
-      current: pathname.startsWith('/campaigns')
+      current: pathname.startsWith('/campaigns'),
     },
     {
       name: 'Configurações',
       href: '/config',
       icon: Settings,
-      current: pathname === '/config'
-    }
+      current: pathname === '/config',
+    },
   ];
+
+  const getInitials = (name: string | null | undefined) => {
+    if (!name) return 'N/A';
+    const parts = name.split(' ');
+    let initials = '';
+    for (const part of parts) {
+      if (part.length > 0) {
+        initials += part[0].toUpperCase();
+      }
+    }
+    return initials;
+  };
 
   return (
     <div className="flex h-screen">
@@ -42,10 +56,16 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <div className="w-80 flex flex-col border-r border-gray-100">
         {/* Header with Logo and Profile */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100">
-          <Link href="/" className="text-xl font-semibold">
-            SEMANTC
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logo-dark.png"
+              alt="SEMANTC Logo"
+              width={120}
+              height={30}
+              priority
+            />
           </Link>
-          <ProfileMenu />
+          <ProfileMenu initials={getInitials(user?.displayName || user?.email)} />
         </div>
 
         {/* Navigation */}
@@ -56,20 +76,18 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               href={item.href}
               className={cn(
                 'flex items-center px-3 py-2 text-sm rounded-lg transition-colors',
-                item.current 
-                  ? 'bg-gray-100 text-gray-900' 
+                item.current
+                  ? 'bg-gray-100 text-gray-900'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
               )}
             >
               <item.icon
                 className={cn(
                   'mr-3 h-4 w-4',
-                  item.current 
-                    ? 'text-gray-900' 
-                    : 'text-gray-400'
+                  item.current ? 'text-gray-900' : 'text-gray-400'
                 )}
               />
-              {item.name}
+              <span className={dmSans.variable}>{item.name}</span>
             </Link>
           ))}
         </nav>
@@ -78,9 +96,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       {/* Main Content */}
       <div className="flex-1 overflow-hidden bg-white">
         <main className="h-full overflow-y-auto">
-          <div className="max-w-7xl mx-auto p-8">
-            {children}
-          </div>
+          <div className="max-w-7xl mx-auto p-8">{children}</div>
         </main>
       </div>
     </div>

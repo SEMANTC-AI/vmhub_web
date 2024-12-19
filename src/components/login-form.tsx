@@ -7,6 +7,8 @@ import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { toast } from 'sonner';
 import { IconSpinner } from './ui/icons';
+import { formStyles, poppins } from '@/styles/common';
+import { cn } from '@/lib/utils';
 
 interface LoginFormProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -47,8 +49,8 @@ export default function LoginForm({ onLogin, error }: LoginFormProps) {
   return (
     <div className="w-full max-w-md px-4 space-y-8">
       <div className="text-center">
-        <h1 className="text-2xl font-semibold mb-2">SEMANTC</h1>
-        <p className="text-gray-600">Faça login para continuar</p>
+        <h1 className={cn("text-2xl font-semibold mb-2", poppins.variable)}>SEMANTC</h1>
+        <p className={cn("text-gray-600", poppins.variable)}>Faça login para continuar</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -63,7 +65,7 @@ export default function LoginForm({ onLogin, error }: LoginFormProps) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-6 py-3 rounded-full border-2 border-gray-100 focus:border-blue-500 focus:outline-none transition-colors"
+            className={formStyles.input}
             placeholder="Email"
             required
           />
@@ -74,7 +76,7 @@ export default function LoginForm({ onLogin, error }: LoginFormProps) {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-6 py-3 rounded-full border-2 border-gray-100 focus:border-blue-500 focus:outline-none transition-colors"
+            className={formStyles.input}
             placeholder="Senha"
             required
           />
@@ -83,7 +85,7 @@ export default function LoginForm({ onLogin, error }: LoginFormProps) {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
+          className={formStyles.button}
         >
           {isLoading ? <IconSpinner className="animate-spin mx-auto" /> : 'Entrar'}
         </button>
@@ -101,7 +103,10 @@ export default function LoginForm({ onLogin, error }: LoginFormProps) {
       <button
         onClick={handleGoogleSignIn}
         disabled={isLoading}
-        className="w-full flex items-center justify-center gap-3 px-6 py-3 rounded-full border-2 border-gray-100 hover:bg-gray-50 transition-colors disabled:opacity-50"
+        className={cn(
+          "w-full flex items-center justify-center gap-3 px-6 py-3 rounded-full border-2 border-gray-100 hover:bg-gray-50 transition-colors disabled:opacity-50",
+          poppins.variable
+        )}
       >
         <GoogleIcon />
         <span>Continuar com Google</span>

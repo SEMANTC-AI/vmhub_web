@@ -7,14 +7,10 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { IconSpinner } from './ui/icons';
 import { useRouter } from 'next/navigation';
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth } from "@/lib/firebase";
-import { Manrope } from 'next/font/google';
-
-const manrope = Manrope({ 
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-});
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { formStyles, poppins } from '@/styles/common';
+import { cn } from '@/lib/utils';
 
 export default function SignupForm() {
   const router = useRouter();
@@ -83,7 +79,7 @@ export default function SignupForm() {
             onChange={(e) => setEmail(e.target.value)}
             required
             placeholder="Email"
-            className="rounded border p-2 dark:bg-zinc-900 dark:border-zinc-700"
+            className={formStyles.input}
           />
           <input
             type="password"
@@ -91,12 +87,12 @@ export default function SignupForm() {
             onChange={(e) => setPassword(e.target.value)}
             required
             placeholder="Password"
-            className="rounded border p-2 dark:bg-zinc-900 dark:border-zinc-700"
+            className={formStyles.input}
           />
           <button
             type="submit"
             disabled={isLoading}
-            className={`${manrope.className} h-10 w-full flex items-center justify-center gap-2 border bg-zinc-900 p-2 text-sm font-semibold text-white hover:bg-zinc-800 disabled:opacity-50`}
+            className={formStyles.button}
           >
             {isLoading ? <IconSpinner className="animate-spin" /> : 'Sign up'}
           </button>
@@ -108,7 +104,10 @@ export default function SignupForm() {
           onClick={handleGoogleSignUp}
           disabled={isLoading}
           type="button"
-          className={`${manrope.className} flex h-10 w-full flex-row items-center justify-center gap-2 border bg-white p-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:bg-zinc-950 dark:hover:bg-zinc-900`}
+          className={cn(
+            "flex h-10 w-full flex-row items-center justify-center gap-2 border bg-white p-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:bg-zinc-950 dark:hover:bg-zinc-900",
+            poppins.variable
+          )}
         >
           {isLoading ? (
             <IconSpinner className="animate-spin" />
@@ -137,18 +136,18 @@ export default function SignupForm() {
           )}
         </button>
 
-        <p className={`${manrope.className} mt-4 text-center text-sm text-zinc-500`}>
+        <p className="mt-4 text-center text-sm text-zinc-500">
           By signing up, you agree to our{' '}
-          <Link 
-            href="/terms" 
-            className={`${manrope.className} font-medium text-zinc-800 hover:underline dark:text-zinc-200`}
+          <Link
+            href="/terms"
+            className="font-medium text-zinc-800 hover:underline dark:text-zinc-200"
           >
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link 
-            href="/privacy" 
-            className={`${manrope.className} font-medium text-zinc-800 hover:underline dark:text-zinc-200`}
+          <Link
+            href="/privacy"
+            className="font-medium text-zinc-800 hover:underline dark:text-zinc-200"
           >
             Privacy Policy
           </Link>
@@ -156,8 +155,8 @@ export default function SignupForm() {
       </div>
 
       <Link href="/login" className="flex flex-row gap-1 text-sm text-zinc-400">
-        <span className={manrope.className}>Already have an account?</span>{' '}
-        <div className={`${manrope.className} font-semibold underline`}>Log in</div>
+        <span className={poppins.variable}>Already have an account?</span>{' '}
+        <div className="font-semibold underline">Log in</div>
       </Link>
     </div>
   );

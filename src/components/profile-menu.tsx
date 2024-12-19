@@ -6,8 +6,14 @@ import { useState, useRef, useEffect } from 'react';
 import { User, LogOut } from 'lucide-react';
 import { useAuth } from '@/lib/context/auth';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { poppins } from '@/styles/common';
 
-export function ProfileMenu() {
+interface ProfileMenuProps {
+  initials?: string;
+}
+
+export function ProfileMenu({ initials }: ProfileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { user, signOut } = useAuth();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -46,7 +52,7 @@ export function ProfileMenu() {
               className="h-full w-full rounded-full object-cover"
             />
           ) : (
-            <User className="h-5 w-5 text-gray-500" />
+            <span className={cn("text-gray-500 font-medium", poppins.variable)}>{initials}</span>
           )}
         </div>
       </button>
